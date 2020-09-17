@@ -1,6 +1,8 @@
-mySubstityde(empty, _, _, empty).
-mySubstityde(tree(L, V, R), V, W, tree(L1, W, R1)) :- mySubstityde(L, V, W, L1), mySubstityde(R, V, W, R1).
-mySubstityde(tree(L, X, R), V, W, tree(L1, X, R1)) :- mySubstityde(L, V, W, L1), mySubstityde(R, V, W, R1), dif(X, V).
+mySubstitude(empty, _, _, empty).
+mySubstitude(tree(L, V, R), V, W, tree(L1, W, R1)) :- mySubstitude(L, V, W, L1), mySubstitude(R, V, W, R1).
+mySubstitude(tree(L, X, R), V, W, tree(L1, X, R1)) :- mySubstitude(L, V, W, L1), mySubstitude(R, V, W, R1), dif(X, V).
+
+horizontal(segm(point(X, Y), point(Z, Y))).
 
 myMember(E, [E | _]).
 myMember(E, [X | Xs]) :- dif(E, X), myMember(E, Xs).

@@ -38,6 +38,4 @@ grandfather(X, Y) :-
     parent(Z, Y),
     man(X).
 
-ancestor(X, Y) :-
-    parent(X, Z), 
-    ancestor(Z, Y).
+
