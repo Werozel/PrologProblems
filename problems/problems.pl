@@ -1,24 +1,24 @@
 
-% №9
-delete_one([], _, []).
-delete_one([X|T], X, T) :- !.
-delete_one([X|T], E, [X|R]) :- delete_one(T, E, R).
-
+% №9 Сортировка выборкой (i, i), (i, o)
 my_sort([], []).
 my_sort(L1, [M|L2]) :- 
     min_list(L1, M), 
     delete_one(L1, M, R), 
     my_sort(R, L2).
 
+delete_one([], _, []).
+delete_one([X|T], X, T) :- !.
+delete_one([X|T], E, [X|R]) :- delete_one(T, E, R).
 
-% №10
+
+% №10 (i, i)
 my_subset([], L2).
 my_subset([X|T], L2) :- 
     member(X, L2), 
     my_subset(T, L2).
 
 
-% №11
+% №11 (i, i, i) (i, i, o), 
 my_union(M1, [], M1).
 my_union(M1, [X|T2], R) :- 
     member(X, M1), 
@@ -31,8 +31,10 @@ my_union(M1, [X|T2], [X|R]) :- my_union(T2, M1, R).
 edge(e, d, 9).
 edge(a, c, 8).
 edge(a, b, 3).
-edge(c, d, 12).
+edge(d, c, 12).
 edge(b, d, 0).
+
+% 2 ()
 
 set_of_nodes(R) :- 
     findall(X, edge(X, _, _), L1), 
@@ -40,7 +42,7 @@ set_of_nodes(R) :-
     append(L1, L2, L), list_to_set(L, R).
 
 
-% №16
+% №16 (i, i, i), (i, i, o), (i, o, i), (o, i, i), (o, o, i), (o, i, o), (i, o, o), (o, o, o)
 path(E, E, []).
 path(E1, E2, L) :- path_tmp(E1, E2, L, [E1]).
 
@@ -60,20 +62,7 @@ path_tmp(E1, E2, [X|L], M) :-
     path_tmp(X, E2, L, [X|M]).
 
 
-% №17
-find_min_pair([], pair([], 0)).
-find_min_pair([X|T], R) :- find_min_pair_tmp(T, R, X).
-
-find_min_pair_tmp([], CurrMin, CurrMin).
-find_min_pair_tmp([pair(List, CurrMinValue)|T], R, pair(CurrMinList, CurrMinValue)) :- find_min_pair_tmp(T, R, pair(List, CurrMinValue)).
-find_min_pair_tmp([pair(List, CurrMinValue)|T], R, pair(CurrMinList, CurrMinValue)) :- find_min_pair_tmp(T, R, pair(CurrMinList, CurrMinValue)).
-find_min_pair_tmp([pair(List, Value)|T], R, pair(CurrMinList, CurrMinValue)) :- 
-    Value < CurrMinValue, 
-    find_min_pair_tmp(T, R, pair(List, Value)).
-find_min_pair_tmp([pair(List, Value)|T], R, pair(CurrMinList, CurrMinValue)) :- 
-    Value > CurrMinValue, 
-    find_min_pair_tmp(T, R, pair(CurrMinList, CurrMinValue)).
-
+% №17 (i, i, i), (i, i, o)
 min_path(E, E, []) :- !.
 min_path(E1, E2, R) :- 
     findall(L, min_path_tmp(E1, E2, L, [E1], [], 0), Res), 
@@ -99,7 +88,21 @@ min_path_tmp(E1, E2, L, M, CurrPath, CurrValue) :-
     min_path_tmp(X, E2, L, [X|M], [X|CurrPath], NewCurrValue).
 
 
-% №18
+find_min_pair([], pair([], 0)).
+find_min_pair([X|T], R) :- find_min_pair_tmp(T, R, X).
+
+find_min_pair_tmp([], CurrMin, CurrMin).
+find_min_pair_tmp([pair(List, CurrMinValue)|T], R, pair(CurrMinList, CurrMinValue)) :- find_min_pair_tmp(T, R, pair(List, CurrMinValue)).
+find_min_pair_tmp([pair(List, CurrMinValue)|T], R, pair(CurrMinList, CurrMinValue)) :- find_min_pair_tmp(T, R, pair(CurrMinList, CurrMinValue)).
+find_min_pair_tmp([pair(List, Value)|T], R, pair(CurrMinList, CurrMinValue)) :- 
+    Value < CurrMinValue, 
+    find_min_pair_tmp(T, R, pair(List, Value)).
+find_min_pair_tmp([pair(List, Value)|T], R, pair(CurrMinList, CurrMinValue)) :- 
+    Value > CurrMinValue, 
+    find_min_pair_tmp(T, R, pair(CurrMinList, CurrMinValue)).
+
+
+% №18  (i, i, o), (o, i, i)
 short_path(E, E, []).
 short_path(E1, E2, L) :- short_path_tmp(E1, E2, L, [E1]).
 
