@@ -34,7 +34,23 @@ edge(a, b, 3).
 edge(d, c, 12).
 edge(b, d, 0).
 
-% 2 ()
+% 2 
+% edge(a, c, 10).
+% edge(a, b, 8).
+% edge(b, c, 8).
+% edge(a, d, 3).
+% edge(d, e, 4).
+% edge(e, c, 3).
+
+% 3 (несвязный)
+% edge(a, b, 2).
+% edge(b, c, 8).
+% edge(c, d, 7).
+% edge(b, d, 0).
+% edge(a, g, 2).
+% edge(g, d ,0).
+
+% edge(e, f, 3).
 
 set_of_nodes(R) :- 
     findall(X, edge(X, _, _), L1), 
