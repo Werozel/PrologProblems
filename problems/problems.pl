@@ -2,12 +2,12 @@
 my_sort([], []).
 my_sort(L1, [M|L2]) :- 
     min_list(L1, M), 
-    delete_one(L1, M, R), 
+    delete_first(L1, M, R), 
     my_sort(R, L2).
 
-delete_one([], _, []).
-delete_one([X|T], X, T) :- !.
-delete_one([X|T], E, [X|R]) :- delete_one(T, E, R).
+delete_first([], _, []).
+delete_first([X|T], X, T) :- !.
+delete_first([X|T], E, [X|R]) :- delete_first(T, E, R).
 
 
 % №10 (i, i) (i, o)
@@ -17,37 +17,26 @@ my_subset(L1, L2) :- my_subset_tmp(L1, L2, L1).
 my_subset_tmp([], L2, []).
 my_subset_tmp([X|T], L2, [X|Res]) :-
     member(X, L2),
-    delete_one(L2, X, NewL2),
+    delete_first(L2, X, NewL2),
     my_subset_tmp(T, NewL2, Res),
     \+ member(X, Res).
 
 
 % №11 (i, i, i) (i, i, o)
+delete_one([X|T], X, T).
+delete_one([X|T], E, [X|R]) :- delete_one(T, E, R).
 
+perm([], []).
+perm([X|T], L) :- perm(T, L1), delete_one(L, X, L1).
 
-my_union(M1, [], M1).
-my_union(M1, [X|T2], R) :- 
+my_union(M1, M2, M3) :- my_union_tmp(M1, M2, M), perm(M3, M), !.
+
+my_union_tmp(M1, [], M1).
+my_union_tmp(M1, [X|T2], R) :- 
     member(X, M1), 
-    delete(X, M1, NewM1),
-    my_union(T2, NewM1, R).
-my_union(M1, [X|T2], [X|R]) :- my_union(T2, M1, R).
-
-% my_union(M1, [], M1) :- !.
-% my_union([], M2, M2).
-% my_union([X|T1], M2, [X|R]) :-
-%     member(X, M2),
-%     delete(M2, X, NewM2),
-%     my_union(T1, NewM2, R).
-% my_union(M1, [X|T2], [X|R]) :- 
-%     member(X, M1), 
-%     delete(T2, M1, NewM1),
-%     my_union(T2, NewM1, R).
-% my_union([X|T1], M2, [X|R]) :-
-%     \+ member(X, M2),
-%     my_union(T1, M2, R).
-% my_union(M1, [X|T2], [X|R]) :- 
-%     \+ member(X, M1),
-%     my_union(T2, M1, R).
+    my_union_tmp(T2, M1, R),
+    !.
+my_union_tmp(M1, [X|T2], [X|R]) :- my_union_tmp(T2, M1, R).
 
 
 % Примеры для графов
