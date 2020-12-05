@@ -10,7 +10,7 @@ delete_first([X|T], X, T) :- !.
 delete_first([X|T], E, [X|R]) :- delete_first(T, E, R).
 
 
-% №10 (i, i) (i, o)
+% №10 (i, i) (o, i) (порождает все подмножества)
 
 my_subset(L1, L2) :- my_subset_tmp(L1, L2, L1).
 
@@ -135,17 +135,28 @@ find_min_pair_tmp([pair(List, Value)|T], R, pair(CurrMinList, CurrMinValue)) :-
 
 
 % №18  (i, i, o), (o, i, i)
-short_path(E, E, []).
-short_path(E1, E2, X) :- 
-    findall(R, path(E1, E2, R), Rall),
-    list_to_set(Rall, Set),
-    zip_with_length(Set, Zipped),
-    find_min_pair(Zipped, pair(X, _)).
+short_path(E, E, []) :- !.
+short_path(E1, E2, R) :- short_path_tmp(E1, E2, Res, [[E1]]), member(R1, Res), delete(R1, E1, R2), delete(R2, E2, R).
 
-zip_with_length([], []).
-zip_with_length([X|T], [pair(X, Length)|Res]) :- 
-    length(X, Length), 
-    zip_with_length(T, Res).
+short_path_tmp(E1, E2, R, Acc) :- find_any_with_element(E2, Acc, R), dif(R, []), !.
+short_path_tmp(E1, E2, R, Acc) :- append_next_destination(Acc, NewAcc), short_path_tmp(E1, E2, R, NewAcc).
+   
+no_dir_edge(X, Y, V) :- edge(X, Y, V).
+no_dir_edge(X, Y, V) :- edge(Y, X, V).
+
+find_any_with_element(E, [], []).
+find_any_with_element(E, [X|T], [X|Res]) :- member(E, X), find_any_with_element(E, T, Res), !.
+find_any_with_element(E, [X|T], Res) :- find_any_with_element(E, T, Res).
+
+append_next_destination([], []).
+append_next_destination([[FirstX|TailX]|T], Res) :- 
+    findall(Next, no_dir_edge(FirstX, Next, _), NextList), 
+    make_routes(NextList, [FirstX|TailX], Routes), 
+    append_next_destination(T, R), 
+    append(Routes, R, Res). 
+
+make_routes([], _, []).
+make_routes([X|T], L, [[X|L]|R]) :- make_routes(T, L, R).
 
 
 % №19
