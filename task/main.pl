@@ -1,7 +1,5 @@
-:- [facts].
-
-:- discontiguous inherit/2.
-:- discontiguous attribute/3.
+% :- [facts].
+:- ['database.txt'].
 
 get_attributes(Sport, Attribute, Value) :- attribute(Sport, Attribute, Value).
 get_attributes(Sport, Attribute, Value) :- 
