@@ -9,39 +9,39 @@ inherit(physical, winter).
 inherit(summer, water).
 inherit(summer, on_land).
 inherit(summer, with_ball).
-inherit(team, "Водное поло").
-inherit(water, "Водное поло").
-inherit(with_ball, "Водное поло").
-inherit(team, "Футбол").
-inherit(on_land, "Футбол").
-inherit(with_ball, "Футбол").
-inherit(team, "Баскетбол").
-inherit(on_land, "Баскетбол").
-inherit(with_ball, "Баскетбол").
-inherit(team, "Волейбол").
-inherit(on_land, "Волейбол").
-inherit(with_ball, "Волейбол").
-inherit(team, "Хоккей").
-inherit(winter, "Хоккей").
-inherit(team, "Биатлон").
-inherit(winter, "Биатлон").
-inherit(individual, "Шахматы").
-inherit(non_physical, "Шахматы").
-inherit(individual, "Бокс").
-inherit(on_land, "Бокс").
-inherit(individual, "Гольф").
-inherit(on_land, "Гольф").
-inherit(with_ball, "Гольф").
-inherit(individual, "Горные лыжи").
-inherit(winter, "Горные лыжи").
-inherit(non_physical, "Киберспорт").
-inherit(water, "Гребля").
-inherit(on_land, "Теннис").
-inherit(with_ball, "Теннис").
-inherit(on_land, "Бадминтон").
-inherit(winter, "Бобслей").
-inherit(team, "Бобслей").
-inherit(winter, "Фигурное катание").
+inherit(team, water_polo).
+inherit(water, water_polo).
+inherit(with_ball, water_polo).
+inherit(team, football).
+inherit(on_land, football).
+inherit(with_ball, football).
+inherit(team, basketball).
+inherit(on_land, basketball).
+inherit(with_ball, basketball).
+inherit(team, vollyeball).
+inherit(on_land, vollyeball).
+inherit(with_ball, vollyeball).
+inherit(team, hockey).
+inherit(winter, hockey).
+inherit(team, biathlon).
+inherit(winter, biathlon).
+inherit(individual, chess).
+inherit(non_physical, chess).
+inherit(individual, boxing).
+inherit(on_land, boxing).
+inherit(individual, golf).
+inherit(on_land, golf).
+inherit(with_ball, golf).
+inherit(individual, skiing).
+inherit(winter, skiing).
+inherit(non_physical, esports).
+inherit(water, rowing).
+inherit(on_land, tennis).
+inherit(with_ball, tennis).
+inherit(on_land, badminton).
+inherit(winter, bobsleigh).
+inherit(team, bobsleigh).
+inherit(winter, figure_skating).
 
 :- dynamic attribute/3.
 
@@ -54,40 +54,40 @@ attribute(winter, season, "Зимний").
 attribute(water, field, "Бассейн").
 attribute(on_land, field, "Поле").
 attribute(with_ball, item, "Мяч").
-attribute("Водное поло", olympic, "Олимпийский").
-attribute("Водное поло", play_style, "Игра руками").
-attribute("Футбол", olympic, "Олимпийский").
-attribute("Футбол", play_style, "Игра ногами").
-attribute("Баскетбол", olympic, "Олимпийский").
-attribute("Баскетбол", play_style, "Игра руками").
-attribute("Баскетбол", field, "Баскетбольная площадка").
-attribute("Волейбол", olympic, "Олимпийский").
-attribute("Волейбол", play_style, "Игра руками").
-attribute("Хоккей", olympic, "Олимпийский").
-attribute("Хоккей", equipment, "Клюшка").
-attribute("Хоккей", field, "Лёд").
-attribute("Биатлон", olympic, "Олимпийский").
-attribute("Биатлон", equipment, "Лыжи и винтовка").
-attribute("Биатлон", field, "Стрельбище").
-attribute("Шахматы", olympic, "Олимпийский").
-attribute("Шахматы", field, "Шахматная доска").
-attribute("Бокс", olympic, "Олимпийский").
-attribute("Бокс", equipment, "Боксерский перчатки").
-attribute("Бокс", field, "Ринг").
-attribute("Гольф", equipment, "Клюшка для гольфа").
-attribute("Горные лыжи", olympic, "Олимпийский").
-attribute("Горные лыжи", equipment, "Лыжи").
-attribute("Киберспорт", equipment, "Компьютер").
-attribute("Гребля", olympic, "Олимпийский").
-attribute("Гребля", equipment, "Лодка").
-attribute("Гребля", field, "Водоем").
-attribute("Теннис", equipment, "Ракетка").
-attribute("Теннис", field, "Корт").
-attribute("Бадминтон", equipment, "Ракетка").
-attribute("Бадминтон", field, "Корт").
-attribute("Бобслей", olympic, "Олимпийский").
-attribute("Бобслей", equipment, "Сани").
-attribute("Бобслей", field, "Ледовая трасса").
-attribute("Фигурное катание", olympic, "Олимпийский").
-attribute("Фигурное катание", equipment, "Коньки").
+attribute(water_polo, olympic, "Олимпийский").
+attribute(water_polo, play_style, "Игра руками").
+attribute(football, olympic, "Олимпийский").
+attribute(football, play_style, "Игра ногами").
+attribute(basketball, olympic, "Олимпийский").
+attribute(basketball, play_style, "Игра руками").
+attribute(basketball, field, "Баскетбольная площадка").
+attribute(vollyeball, olympic, "Олимпийский").
+attribute(vollyeball, play_style, "Игра руками").
+attribute(hockey, olympic, "Олимпийский").
+attribute(hockey, equipment, "Клюшка").
+attribute(hockey, field, "Лёд").
+attribute(biathlon, olympic, "Олимпийский").
+attribute(biathlon, equipment, "Лыжи и винтовка").
+attribute(biathlon, field, "Стрельбище").
+attribute(chess, olympic, "Олимпийский").
+attribute(chess, field, "Шахматная доска").
+attribute(boxing, olympic, "Олимпийский").
+attribute(boxing, equipment, "Боксерский перчатки").
+attribute(boxing, field, "Ринг").
+attribute(golf, equipment, "Клюшка для гольфа").
+attribute(skiing, olympic, "Олимпийский").
+attribute(skiing, equipment, "Лыжи").
+attribute(esports, equipment, "Компьютер").
+attribute(rowing, olympic, "Олимпийский").
+attribute(rowing, equipment, "Лодка").
+attribute(rowing, field, "Водоем").
+attribute(tennis, equipment, "Ракетка").
+attribute(tennis, field, "Корт").
+attribute(badminton, equipment, "Ракетка").
+attribute(badminton, field, "Корт").
+attribute(bobsleigh, olympic, "Олимпийский").
+attribute(bobsleigh, equipment, "Сани").
+attribute(bobsleigh, field, "Ледовая трасса").
+attribute(figure_skating, olympic, "Олимпийский").
+attribute(figure_skating, equipment, "Коньки").
 

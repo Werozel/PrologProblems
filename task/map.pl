@@ -26,3 +26,17 @@ get([_|T], K, V) :- get(T, K, V).
 remove([], _, []) :- fail.
 remove([pair(K, _)|T], K, T) :- !.
 remove([X|T], K, [X|New]) :- remove(T, K, New).
+
+print_map([]).
+print_map([pair(Key, Value)|T]) :-
+    format('~a = ~w\n', [Key, Value]),
+    print_map(T).
+
+print_difference([]).
+print_difference([pair(Key, pair(FirstValue, SecondValue))|T]) :-
+    format('~a = ~w -> ~w\n', [Key, FirstValue, SecondValue]),
+    print_difference(T),
+    !.
+print_difference([pair(Key, Value)|T]) :-
+    format('~a = ~w\n', [Key, Value]),
+    print_difference(T).
