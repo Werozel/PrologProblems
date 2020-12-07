@@ -25,6 +25,16 @@ get_sports_duplicates(X) :-
     inherit(_, X), 
     \+ inherit(X, _).
 
+% Получение различия в конкретном атрибуте
+get_attribute_dif(Sport, Sport, _, "None") :- !.
+get_attribute_dif(FirstSport, SecondSport, Attribute, "None") :- 
+    get_attribute_value(FirstSport, Attribute, Value),
+    get_attribute_value(SecondSport, Attribute, Value).
+get_attribute_dif(FirstSport, SecondSport, Attribute, pair(FirstValue, SecondValue)) :-
+    get_attribute_value(FirstSport, Attribute, FirstValue),
+    get_attribute_value(SecondSport, Attribute, SecondValue),
+    dif(FirstValue, SecondValue).
+
 % Сохранение в базу данных
 save_all() :-
     tell('database.txt'),
