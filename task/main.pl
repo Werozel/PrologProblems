@@ -1,5 +1,5 @@
-:- [facts].
-% :- ['database.txt'].
+% :- [facts].
+:- ['database.txt'].
 :- [map].
 
 % Получение всех аттрибутов для спорта (i, o, o) или значения для спорта и его аттрибута (i, i, i).
@@ -7,7 +7,7 @@ get_attributes(Sport, Attribute, Value) :-
     get_attribute_map(Sport, Map),
     iterate_map(Map, Attribute, Value).
 
-% Получение списка всех уникальных аттрибутов
+% Получение списка всех уникальных аттрибутов для спорта
 get_attribute_map(Sport, ResMap) :- findall(pair(X, Y), get_attributes_duplicates(Sport, X, Y), ResList), make_map(ResList, ResMap).
 
 get_attributes_duplicates(Sport, Attribute, Value) :- attribute(Sport, Attribute, Value).
@@ -28,6 +28,11 @@ get_sports(SportsSet) :-
 get_sports_duplicates(X) :- 
     inherit(_, X), 
     \+ inherit(X, _).
+
+print_list([]).
+print_list([X|T]) :-
+    writeln(X),
+    print_list(T).
 
 % Получение различия в конкретном атрибуте
 get_attribute_diff(Sport, Sport, _, "None") :- !.
@@ -55,6 +60,7 @@ start :-
     writeln("1 - Найти все аттрибуты определенного вида спорта"),
     writeln("2 - Найти значение аттрибута для определенного вида спорта"),
     writeln("3 - Найти различия между двумя видами спорта"),
+    writeln("4 - Найти все зарегестрированные виды спорта"),
     read(N),
     execute(N). 
 
@@ -76,6 +82,9 @@ execute(3) :-
     write("Введите название второго спорта: "),
     read(SecondSport),
     print_attribute_diff(FirstSport, SecondSport).
+execute(4) :-
+    get_sports(Sports),
+    print_list(Sports).
 
 % Сохранение в базу данных
 save_all() :-
