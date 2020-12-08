@@ -11,13 +11,23 @@ make_map([pair(K, V)|T], [pair(K, V)|NewMap]) :-
     !.
 make_map([pair(_, _)|T], NewMap) :- make_map(T, NewMap).
 
-update([], pair(X, V), [pair(X, V)]).
+update([], pair(X, V), [pair(X, V)]) :- !.
 update([pair(X, _)|T], pair(X, VNew), [pair(X, VNew)|T]) :- !.
 update([X|T], E, [X|New]) :- update(T, E, New).
 
-add([], pair(X, V), [pair(X, V)]).
+update_with_map(Map, [], Map) :- !.
+update_with_map(Map, [X|T], OutMap) :-
+    update(Map, X, UpdatedMap),
+    update_with_map(UpdatedMap, T, OutMap).
+
+add([], pair(X, V), [pair(X, V)]) :- !.
 add([pair(X, VOld)|T], pair(X, _), [pair(X, VOld)|T]) :- !.
 add([X|T], E, [X|New]) :- add(T, E, New).
+
+add_map(Map, [], Map) :- !.
+add_map(Map, [X|T], OutMap) :-
+    add(Map, X, UpdatedMap),
+    add_map(UpdatedMap, T, OutMap).
 
 get([], _, []) :- fail.
 get([pair(K, V)|_], K, V) :- !.

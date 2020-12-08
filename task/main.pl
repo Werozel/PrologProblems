@@ -7,18 +7,31 @@ get_all_attributes(Attributes) :-
     findall(Attribute, attribute(_, Attribute, _), AttributesList),
     list_to_set(AttributesList, Attributes).
 
-% Получение всех аттрибутов для спорта (i, o, o) или значения для спорта и его аттрибута (i, i, i).
+% Получение всех аттрибутов для спорта (i, o, o) или значения для спорта и его аттрибута (i, i, o).
 get_attributes(Sport, Attribute, Value) :- 
     get_attribute_map(Sport, Map),
     iterate_map(Map, Attribute, Value).
 
 % Получение списка всех уникальных аттрибутов для спорта
-get_attribute_map(Sport, ResMap) :- findall(pair(X, Y), get_attributes_duplicates(Sport, X, Y), ResList), make_map(ResList, ResMap).
+get_attribute_map(Sport, _, _) :-
+    \+ inherit(_, ),
+    !.
+get_attribute_map(Sport, LastMap, CombinedMaps) :- 
+    findall(Map, get_attribute_helper(Sport, LastMap, Map), ListOfMaps),
+    flatten(ListOfMaps, ResList),
+    make_map(ResList, ResMap),
+    findall(pair(X, Y), attribute(Sport, X, Y), AttributesList), 
+    make_map(AttributesList, AttributesMap), 
+    update_with_map(ResMap, AttributesMap, CombinedMaps).
 
-get_attributes_duplicates(Sport, Attribute, Value) :- attribute(Sport, Attribute, Value).
-get_attributes_duplicates(Sport, Attribute, Value) :- 
+get_attribute_helper(Sport, InMap, OutMap) :-
     inherit(Parent, Sport),
-    get_attributes_duplicates(Parent, Attribute, Value).
+    get_attribute_map(Parent, InMap, OutMap). 
+
+% get_attributes_duplicates(Sport, Attribute, Value) :- attribute(Sport, Attribute, Value).
+% get_attributes_duplicates(Sport, Attribute, Value) :- 
+%     inherit(Parent, Sport),
+%     get_attributes_duplicates(Parent, Attribute, Value).
 
 % Получение конкретного аттрибута для спорта
 get_attribute_value(Sport, Attribute, Res) :- 
