@@ -1,5 +1,5 @@
-% :- [facts].
-:- ['database.txt'].
+:- [facts].
+% :- ['database.txt'].
 :- [map].
 
 % Получение всех аттрибутов в системе
@@ -27,12 +27,8 @@ get_attribute_value(Sport, Attribute, Res) :-
 
 % Получение всех видов спорта
 get_sports(SportsSet) :- 
-    findall(X, get_sports_duplicates(X), Sports), 
+    findall(X, instance(X), Sports), 
     list_to_set(Sports, SportsSet).
-
-get_sports_duplicates(X) :- 
-    inherit(_, X), 
-    \+ inherit(X, _).
 
 print_list([]).
 print_list([X|T]) :-
@@ -61,6 +57,10 @@ print_attribute_diff(FirstSport, SecondSport) :-
     print_difference(ResultMap).
 
 % Редактировать аттрибуты спорта
+edit_sport_attribute(Sport, _, _) :-
+    \+ inherit(_, Sport),
+    writeln("Такого спорта не существует"),
+    !.
 edit_sport_attribute(Sport, Attribute, Value) :- 
     attribute(Sport, Attribute, _),
     retract(attribute(Sport, Attribute, _)),
@@ -83,22 +83,57 @@ manage_edit(Sport, 1) :-
     write("Введите аттрибут: "),
     read(Attribute),
     write("Введите значение: "),
-    read(Value),    % TODO read string
-    edit_sport_attribute(Sport, Attribute, Value).
+    read(Value),
+    edit_sport_attribute(Sport, Attribute, Value),
+    manage_edit(Sport).
 manage_edit(Sport, 2) :-
     write("Введите аттрибут: "),
     read(Attribute),
-    delete_sport_attribute(Sport, Attribute).
-manage_edit(_, q) :- 
-    start,
-    !.
+    delete_sport_attribute(Sport, Attribute),
+    manage_edit(Sport).
+manage_edit(_, q) :- !.
 manage_edit(Sport, _) :- manage_edit(Sport).
 
 % Удаление спорта
-delete_sport(Sport) :-
-    attribute(Sport, Attribute, _),
-    retract(attribute(Sport, Attribute, _)),
-    retract(inherit(_, Sport)). % TODO add instance()
+dalete_sport(Sport) :-
+    not(instance(Sport)),
+    writeln("Такого спорта не существует"),
+    !.
+delete_sport(Sport) :- retract(attribute(Sport, _, _)).
+delete_sport(Sport) :- retract(inherit(_, Sport)).
+delete_sport(Sport) :- retract(instance(Sport)).
+
+% Добавление нового спорта
+add_sport(Sport) :- 
+    assert(instance(Sport)).
+
+add_inherit(Class, Sport) :-
+    inherit(Class, Sport),
+    !.
+add_inherit(Class, Sport) :- 
+    assert(inherit(Class, Sport)).
+
+manage_sport_inheritance(Sport) :- 
+    \+ instance(Sport),
+    writeln("Такого спорта не существует"),
+    !.
+manage_sport_inheritance(Sport) :-
+    writeln("1 - Добавить класс наследования для спорта"),
+    writeln("2 - Вывести все классы наследования для спорта"),
+    writeln("q - Вернуться"),
+    read(N),
+    manage_sport_inheritance(Sport, N).
+manage_sport_inheritance(Sport, q) :- !.
+manage_sport_inheritance(Sport, 1) :-
+    write("Введите класс: "),
+    read(Class),
+    add_inherit(Class, Sport),
+    manage_sport_inheritance(Sport).
+manage_sport_inheritance(Sport, 2) :-
+    findall(X, class(X), Classes),
+    print_list(Classes),
+    manage_sport_inheritance(Sport).
+manage_sport_inheritance(Sport, _) :- manage_sport_inheritance(Sport).
 
 % Интеракция с пользователем
 start :- 
@@ -109,13 +144,9 @@ start :-
     writeln("5 - Добавить новый вид спорта"),
     writeln("6 - Удалить существующий вид спорта"),
     writeln("7 - Редактировать существующий вид спорта"),
+    writeln("q - Выйти"),
     read(N),
     execute(N). 
-
-% Добавление нового спорта
-add_sport(Sport) :- 
-    % TODO inherit
-    assert(instance(Sport)).
 
 execute(1) :- 
     write("Введите название спорта: "),
@@ -125,39 +156,48 @@ execute(1) :-
         get_attributes(Sport, Attribute, Value), 
         Map
     ),
-    print_map(Map).
+    print_map(Map),
+    start.
 execute(2) :- 
     write("Введите название спорта: "),
     read(Sport),
     write("Введите название аттрибута: "),
     read(Attribute),
     get_attributes(Sport, Attribute, Value),
-    writeln(Value).    
+    writeln(Value),
+    start.    
 execute(3) :-
     write("Введите название первого спорта: "),
     read(FirstSport),
     write("Введите название второго спорта: "),
     read(SecondSport),
-    print_attribute_diff(FirstSport, SecondSport).
+    print_attribute_diff(FirstSport, SecondSport),
+    start.
 execute(4) :-
     get_sports(Sports),
-    print_list(Sports).
+    print_list(Sports),
+    start.
 execute(5) :-
     write("Введите новый спорт: "),
     read(Sport),
-    add_sport(Sport).
+    add_sport(Sport),
+    manage_sport_inheritance(Sport),
+    start.
 execute(6) :-
     write("Введите спорт: "),
     read(Sport),
-    delete_sport(Sport).
+    delete_sport(Sport),
+    start.
 execute(7) :-
     write("Введите спорт: "),
     read(Sport),
-    manage_edit(Sport).
+    manage_edit(Sport),
+    start.
+execute(q) :- !.
 execute(_) :- start.
 
 % Сохранение в базу данных
-save_all() :-
+save_all :-
     tell('database.txt'),
     listing(inherit),
     listing(attribute),
