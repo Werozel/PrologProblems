@@ -20,33 +20,11 @@ update_with_map(Map, [X|T], OutMap) :-
     update(Map, X, UpdatedMap),
     update_with_map(UpdatedMap, T, OutMap).
 
-add([], pair(X, V), [pair(X, V)]) :- !.
-add([pair(X, VOld)|T], pair(X, _), [pair(X, VOld)|T]) :- !.
-add([X|T], E, [X|New]) :- add(T, E, New).
-
-add_map(Map, [], Map) :- !.
-add_map(Map, [X|T], OutMap) :-
-    add(Map, X, UpdatedMap),
-    add_map(UpdatedMap, T, OutMap).
-
 get([], _, []) :- fail.
 get([pair(K, V)|_], K, V) :- !.
 get([_|T], K, V) :- get(T, K, V).
-
-remove([], _, []) :- fail.
-remove([pair(K, _)|T], K, T) :- !.
-remove([X|T], K, [X|New]) :- remove(T, K, New).
 
 print_map([]).
 print_map([pair(Key, Value)|T]) :-
     format('~a = ~w\n', [Key, Value]),
     print_map(T).
-
-print_difference([]).
-print_difference([pair(Key, pair(FirstValue, SecondValue))|T]) :-
-    format('~a = ~w -> ~w\n', [Key, FirstValue, SecondValue]),
-    print_difference(T),
-    !.
-print_difference([pair(Key, Value)|T]) :-
-    format('~a = ~w\n', [Key, Value]),
-    print_difference(T).

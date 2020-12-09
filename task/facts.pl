@@ -8,6 +8,8 @@
 :- discontiguous instance / 1.
 :- discontiguous class / 1.
 
+class(sport).
+
 class(non_physical).
 inherit(sport, non_physical).
 attribute(non_physical, physically, "Интеллектуальный").

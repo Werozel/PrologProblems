@@ -91,3 +91,37 @@ attribute(bobsleigh, field, "Ледовая трасса").
 attribute(figure_skating, olympic, "Олимпийский").
 attribute(figure_skating, equipment, "Коньки").
 
+%   Foreign: system:instance/2
+
+:- dynamic instance/1.
+
+instance(water_polo).
+instance(football).
+instance(basketball).
+instance(vollyeball).
+instance(hockey).
+instance(badminton).
+instance(chess).
+instance(boxing).
+instance(golf).
+instance(skiing).
+instance(esports).
+instance(rowing).
+instance(tennis).
+instance(badminton).
+instance(bobsleigh).
+instance(figure_skating).
+
+:- dynamic class/1.
+
+class(sport).
+class(non_physical).
+class(physical).
+class(team).
+class(individual).
+class(summer).
+class(winter).
+class(water).
+class(on_land).
+class(with_ball).
+

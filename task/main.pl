@@ -1,5 +1,5 @@
-:- [facts].
-% :- ['database.txt'].
+% :- [facts].
+:- ['database.txt'].
 :- [map].
 
 % Получение всех аттрибутов в системе
@@ -9,12 +9,12 @@ get_all_attributes(Attributes) :-
 
 % Получение всех аттрибутов для спорта (i, o, o) или значения для спорта и его аттрибута (i, i, o).
 get_attributes(Sport, Attribute, Value) :- 
-    get_attribute_map(Sport, Map),
+    get_attribute_map(Sport, [], Map),
     iterate_map(Map, Attribute, Value).
 
 % Получение списка всех уникальных аттрибутов для спорта
 get_attribute_map(Sport, _, _) :-
-    \+ inherit(_, ),
+    \+ inherit(_, Sport),
     !.
 get_attribute_map(Sport, LastMap, CombinedMaps) :- 
     findall(Map, get_attribute_helper(Sport, LastMap, Map), ListOfMaps),
@@ -27,11 +27,6 @@ get_attribute_map(Sport, LastMap, CombinedMaps) :-
 get_attribute_helper(Sport, InMap, OutMap) :-
     inherit(Parent, Sport),
     get_attribute_map(Parent, InMap, OutMap). 
-
-% get_attributes_duplicates(Sport, Attribute, Value) :- attribute(Sport, Attribute, Value).
-% get_attributes_duplicates(Sport, Attribute, Value) :- 
-%     inherit(Parent, Sport),
-%     get_attributes_duplicates(Parent, Attribute, Value).
 
 % Получение конкретного аттрибута для спорта
 get_attribute_value(Sport, Attribute, Res) :- 
@@ -68,6 +63,15 @@ print_attribute_diff(FirstSport, SecondSport) :-
     findall(pair(Attribute, Difference), get_attribute_diff(FirstSport, SecondSport, Attribute, Difference), ResultList),
     make_map(ResultList, ResultMap),
     print_difference(ResultMap).
+
+print_difference([]).
+print_difference([pair(Key, pair(FirstValue, SecondValue))|T]) :-
+    format('~a = ~w -> ~w\n', [Key, FirstValue, SecondValue]),
+    print_difference(T),
+    !.
+print_difference([pair(Key, Value)|T]) :-
+    format('~a = ~w\n', [Key, Value]),
+    print_difference(T).
 
 % Редактировать аттрибуты спорта
 edit_sport_attribute(Sport, _, _) :-
@@ -136,7 +140,7 @@ manage_sport_inheritance(Sport) :-
     writeln("q - Вернуться"),
     read(N),
     manage_sport_inheritance(Sport, N).
-manage_sport_inheritance(Sport, q) :- !.
+manage_sport_inheritance(_, q) :- !.
 manage_sport_inheritance(Sport, 1) :-
     write("Введите класс: "),
     read(Class),
@@ -214,4 +218,6 @@ save_all :-
     tell('database.txt'),
     listing(inherit),
     listing(attribute),
+    listing(instance),
+    listing(class),
     told.
